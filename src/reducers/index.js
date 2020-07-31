@@ -16,6 +16,7 @@ import { addPostCommentReducer } from "./addPostCommentReducer";
 import { updatePostCommentReducer } from "./updatePostCommentReducer";
 import { searchIconReducer } from "./searchIconReducer";
 import { addLocationReducer } from "./addLocationReducer";
+import { speechToTextReducer } from "./speechToTextReducer";
 
 export const rootReducer = combineReducers({
     appTheme: appThemeReducer,
@@ -33,5 +34,6 @@ export const rootReducer = combineReducers({
     addPostComment: addPostCommentReducer,
     updatePostComment: updatePostCommentReducer,
     searchIcon: searchIconReducer,
-    addLocation: addLocationReducer
+    addLocation: addLocationReducer,
+    speechToText: speechToTextReducer
 });

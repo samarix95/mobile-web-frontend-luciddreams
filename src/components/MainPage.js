@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
+import clsx from "clsx";
 
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Container from "@material-ui/core/Container";
@@ -13,51 +14,40 @@ import historyPath from "../historyPath";
 import Styles from "../styles";
 import dict from "../dictionary";
 
-import { setAppTheme } from "../actions/actions";
+import { setAppTheme, setOpenDialogConfirm, setResetDialogConfirm } from "../actions/actions";
 import { removeToken } from "../functions/auth";
 import { getLanguage } from "../reducers/languageReducer";
 import { getThemePalette } from "../reducers/appThemeReducer";
+import { getDialogConfirmData, getDialogConfirmAction } from "../reducers/dialogConfirmReducer";
 
 import Sun from "../img/sun.svg";
 import Moon from "../img/moon.svg";
+import Aeronaut from "../img/aeronaut.svg";
+import Map from "../img/map.svg";
 
 function MainPage(props) {
-    const { setAppTheme, appTheme, language } = props;
+    const { setAppTheme, appTheme, language,
+        openDialogConfirm, resetDialogConfirm, dialogConfirmData, dialogConfirmAction
+    } = props;
     const classes = Styles();
-    const [currentThemeIcon, setCurrenThemeIcon] = React.useState(Sun);
-
     const handleChangeTheme = () => {
-        if (currentThemeIcon === Sun) {
-            setCurrenThemeIcon(Moon)
+        if (appTheme.palette.type === "light") {
             setAppTheme({
-                pallete: {
+                palette: {
                     type: "dark",
-                    primary: {
-                        main: "#ffffff"
-                    },
-                    secondary: {
-                        main: "#f50057"
-                    },
-                    error: {
-                        main: "#cc0000"
-                    }
+                    primary: { main: "#bdbdbd" },
+                    secondary: { main: "#f50057" },
+                    error: { main: "#cc0000" }
                 }
             });
         }
         else {
-            setCurrenThemeIcon(Sun)
             setAppTheme({
-                pallete: {
+                palette: {
                     type: "light",
-                    primary: {
-                        main: "#ffffff"
-                    },
-                    secondary: {
-                        main: "#f50057"
-                    },
-                    error: {
-                        main: "#cc0000"
-                    }
+                    primary: { main: "#424242" },
+                    secondary: { main: "#f50057" },
+                    error: { main: "#cc0000" }
                 }
             });
         }
@@ -76,27 +66,78 @@ function MainPage(props) {
     };
 
     const handleLogout = () => {
-        removeToken();
+        openDialogConfirm({
+            title: dict[language].buttons.LogOut,
+            message: dict[language].texts.LogOut,
+            action: "log_out"
+        });
     };
+
+    React.useEffect(() => {
+        if (typeof dialogConfirmAction === "boolean" && dialogConfirmData.action === "log_out") {
+            resetDialogConfirm();
+            if (dialogConfirmAction) {
+                removeToken();
+            }
+        }
+    }, [dialogConfirmAction, resetDialogConfirm, dialogConfirmData]);
 
     return (
         <div className={classes.root}>
-            <Container>
+            <Container className={classes.MainPageContainer}>
                 <Grid
                     container
                     direction="column"
                     justify="center"
                     alignItems="center"
-                    spacing={1}
                 >
                     <Grid item>
-                        <ButtonBase
-                            className={`${classes.SunImg}`}
-                            style={{ backgroundImage: `url(${currentThemeIcon})` }}
-                            onClick={handleChangeTheme}
-                        />
+                        <Grid
+                            container
+                            direction="row"
+                            justify="space-around"
+                            alignItems="flex-end"
+                        >
+                            <Grid item>
+                                <ButtonBase className={clsx(classes.MedImg, classes.BackgroundImg, appTheme.palette.type === "light" ? classes.InvertOut : classes.InvertIn)}
+                                    style={{
+                                        backgroundImage: `url(${Aeronaut})`,
+                                        filter: appTheme.palette.type === "dark" ? "invert(1)" : "invert(0)"
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <div style={{ position: "relative" }}>
+                                    <ButtonBase className={clsx(classes.BigImg, classes.BackgroundImg, appTheme.palette.type === "light" ? classes.FadeIn : classes.FadeOut)}
+                                        style={{
+                                            backgroundImage: `url(${Sun})`,
+                                            opacity: "0"
+                                        }}
+                                        onClick={handleChangeTheme}
+                                    />
+                                    <ButtonBase className={clsx(classes.BigImg, classes.BackgroundImg, appTheme.palette.type === "dark" ? classes.FadeIn : classes.FadeOut)}
+                                        style={{
+                                            position: "absolute",
+                                            top: 0,
+                                            left: 0,
+                                            backgroundImage: `url(${Moon})`,
+                                            filter: "invert(1)"
+                                        }}
+                                        onClick={handleChangeTheme}
+                                    />
+                                </div>
+                            </Grid>
+                            <Grid item>
+                                <ButtonBase className={clsx(classes.MedImg, classes.BackgroundImg, appTheme.palette.type === "light" ? classes.InvertOut : classes.InvertIn)}
+                                    style={{
+                                        backgroundImage: `url(${Map})`,
+                                        filter: appTheme.palette.type === "dark" ? "invert(1)" : "invert(0)"
+                                    }}
+                                />
+                            </Grid>
+                        </Grid>
                     </Grid>
-                    <Grid item>
+                    <Grid item className={classes.marginTop8}>
                         <Grid
                             container
                             direction="column"
@@ -105,22 +146,22 @@ function MainPage(props) {
                             spacing={1}
                         >
                             <Grid item className={`${classes.MenuButtons}`}>
-                                <Button fullWidth size="medium" variant="outlined" color="primary" onClick={handleClickDreams}>
+                                <Button className={clsx(appTheme.palette.type === "dark" ? classes.DarkBackgroundColor : classes.LightBackgroundColor)} fullWidth size="medium" variant="outlined" color="primary" onClick={handleClickDreams}>
                                     {dict[language].buttons.MyDreams}
                                 </Button>
                             </Grid>
                             <Grid item className={`${classes.MenuButtons}`}>
-                                <Button fullWidth size="medium" variant="outlined" color="primary" onClick={handleClickAddDream}>
+                                <Button className={clsx(appTheme.palette.type === "dark" ? classes.DarkBackgroundColor : classes.LightBackgroundColor)} fullWidth size="medium" variant="outlined" color="primary" onClick={handleClickAddDream}>
                                     {dict[language].buttons.AddDream}
                                 </Button>
                             </Grid>
                             <Grid item className={`${classes.MenuButtons}`}>
-                                <Button fullWidth size="medium" variant="outlined" color="primary" onClick={handleClickTechnics}>
+                                <Button className={clsx(appTheme.palette.type === "dark" ? classes.DarkBackgroundColor : classes.LightBackgroundColor)} fullWidth size="medium" variant="outlined" color="primary" onClick={handleClickTechnics}>
                                     {dict[language].buttons.Technics}
                                 </Button>
                             </Grid>
                             <Grid item className={`${classes.MenuButtons}`}>
-                                <Button fullWidth size="medium" variant="outlined" color="primary" onClick={handleLogout}>
+                                <Button className={clsx(appTheme.palette.type === "dark" ? classes.DarkBackgroundColor : classes.LightBackgroundColor)} fullWidth size="medium" variant="outlined" color="primary" onClick={handleLogout}>
                                     {dict[language].buttons.LogOut}
                                 </Button>
                             </Grid>
@@ -136,17 +177,24 @@ MainPage.propTypes = {
     language: PropTypes.string.isRequired,
     appTheme: PropTypes.object.isRequired,
     setAppTheme: PropTypes.func.isRequired,
+    dialogConfirmData: PropTypes.object.isRequired,
+    openDialogConfirm: PropTypes.func.isRequired,
+    resetDialogConfirm: PropTypes.func.isRequired
 };
 
 const mapStateToProps = store => {
     return {
         appTheme: getThemePalette(store),
-        language: getLanguage(store)
+        language: getLanguage(store),
+        dialogConfirmData: getDialogConfirmData(store),
+        dialogConfirmAction: getDialogConfirmAction(store)
     }
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-    setAppTheme: setAppTheme
+    setAppTheme: setAppTheme,
+    openDialogConfirm: setOpenDialogConfirm,
+    resetDialogConfirm: setResetDialogConfirm
 }, dispatch)
 
 export default connect(

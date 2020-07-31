@@ -38,7 +38,7 @@ function Technics(props) {
 
     return (
         <div className={classes.root}>
-            <Paper className={`${classes.padding1} ${classes.stickyTop}`} >
+            <Paper className={`${classes.padding1} ${classes.stickyTop} ${classes.transprent02}`} >
                 <Breadcrumbs separator="›" aria-label="breadcrumb">
                     <StyledBreadcrumb component="a" color="primary" label={dict[language].buttons.Main} icon={<HomeIcon />} onClick={handleBack} />
                     <StyledBreadcrumb component="a" color="primary" disabled={true} label={dict[language].buttons.Technics} />

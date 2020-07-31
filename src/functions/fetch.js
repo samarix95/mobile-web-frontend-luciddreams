@@ -11,15 +11,16 @@ import {
     setAddPostCommentsPending, setAddPostCommentsData, setAddPostCommentsError,
     setUpdatePostCommentsPending, setUpdatePostCommentsData, setUpdatePostCommentsError,
     setSearchIconPending, setSearchIconData, setSearchIconError,
-    setAddLocationPending, setAddLocationData, setAddLocationError
+    setAddLocationPending, setAddLocationData, setAddLocationError,
+    setSTTPending, setSTTData, setSTTError
 } from "../actions/actions";
 import { setToken } from "../functions/auth";
 import history from "../history";
 import historyPath from "../historyPath";
 import dict from "../dictionary";
 
-const path = "http://192.168.1.32:8080";
-//const path = "https://ldserver.herokuapp.com";
+//const path = "https://192.168.1.32:443";
+const path = "https://ldserver.herokuapp.com";
 
 export const userSignIn = (data) => {
     return dispatch => {
@@ -246,12 +247,13 @@ export const fetchUpdatePost = (data) => {
             .then(result => {
                 dispatch(setUpdatePostData(result));
                 dispatch(fetchUserPosts({ language: data.language, create_user: data.create_user }));
-                history.push({
-                    pathname: historyPath.ReadDream,
-                    defaultData: {
-                        id: data.id
-                    }
-                });
+                if (data.redirect !== false)
+                    history.push({
+                        pathname: historyPath.ReadDream,
+                        defaultData: {
+                            id: data.id
+                        }
+                    });
             })
             .catch(error => {
                 dispatch(setUpdatePostError());
@@ -432,6 +434,33 @@ export const fetchAddLocation = (data) => {
             })
             .catch(error => {
                 dispatch(setAddLocationError());
+                error.json().then(err => {
+                    dispatch(setOpenSnackbar({ variant: "error", message: dict[data.language].errors[err.error] }));
+                });
+            });
+    }
+}
+
+export const fetchSTT = (data) => {
+    return dispatch => {
+        dispatch(setSTTPending());
+        return fetch(`${path}/speech-to-text`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) return Promise.reject(response);
+                else return Promise.resolve(response.json());
+            })
+            .then(result => {
+                dispatch(setSTTData(result));
+                return result;
+            })
+            .catch(error => {
+                dispatch(setSTTError());
                 error.json().then(err => {
                     dispatch(setOpenSnackbar({ variant: "error", message: dict[data.language].errors[err.error] }));
                 });

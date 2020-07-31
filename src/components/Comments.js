@@ -90,11 +90,11 @@ function Comments(props) {
                             />
                         </Paper>
                     </Grid>
-                    <Grid item className={`${classes.margin1}`}>
+                    <Grid item className={`${classes.margin1} ${classes.padding1}`}>
                         <Grid container
                             direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
+                            justify="flex-end"
+                            alignItems="flex-end"
                             spacing={1}
                         >
                             <Grid item>

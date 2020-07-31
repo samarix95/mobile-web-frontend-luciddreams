@@ -34,7 +34,7 @@ function CardTechnic(props) {
 
     return (
         <Grid item xs={12} sm={4} md={3} style={{ display: "flex" }}>
-            <Card className={`${classes.margin1} ${classes.flexSpaceBetween}`} style={{ width: "100%" }} >
+            <Card className={`${classes.margin1} ${classes.flexSpaceBetween} ${classes.transprent03}`} style={{ width: "100%" }} >
                 <CardContent className={`${classes.flexSpaceBetween}`} style={{ height: "100%" }} >
                     <Typography variant="h6" paragraph>
                         {technicsData.find(item => (item.id === card_id))[`name_${language}`]}

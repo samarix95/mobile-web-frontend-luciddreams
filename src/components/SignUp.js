@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
+import clsx from "clsx";
 
 import LinearProgress from "@material-ui/core/LinearProgress";
 import TextField from "@material-ui/core/TextField";
@@ -15,10 +16,11 @@ import Styles from "../styles";
 import dict from "../dictionary";
 import { userSignUp } from "../functions/fetch";
 import { getAuthPending } from "../reducers/authReducer";
+import { getThemePalette } from "../reducers/appThemeReducer";
 import { getLanguage } from "../reducers/languageReducer";
 
 function SignUp(props) {
-    const { language, authPending, signUp } = props;
+    const { appTheme, language, authPending, signUp } = props;
     const classes = Styles();
     const [login, setLogin] = React.useState("");
     const [nickname, setNickname] = React.useState("");
@@ -92,12 +94,16 @@ function SignUp(props) {
                         </Grid>
                         : <React.Fragment>
                             <Grid item className={`${classes.margin1}`}>
-                                <Button fullWidth size="small" onClick={handleSignUp} variant="outlined" color="primary">
+                                <Button className={clsx(appTheme.palette.type === "dark" ? classes.DarkBackgroundColor : classes.LightBackgroundColor)}
+                                    fullWidth size="small" onClick={handleSignUp} variant="outlined" color="primary"
+                                >
                                     {dict[language].buttons.SignUp}
                                 </Button>
                             </Grid>
                             <Grid item className={`${classes.margin1}`}>
-                                <Button fullWidth size="small" onClick={handleBack} variant="outlined" color="primary">
+                                <Button className={clsx(appTheme.palette.type === "dark" ? classes.DarkBackgroundColor : classes.LightBackgroundColor)}
+                                    fullWidth size="small" onClick={handleBack} variant="outlined" color="primary"
+                                >
                                     {dict[language].buttons.Back}
                                 </Button>
                             </Grid>
@@ -110,6 +116,7 @@ function SignUp(props) {
 }
 
 SignUp.propTypes = {
+    appTheme: PropTypes.object.isRequired,
     language: PropTypes.string.isRequired,
     authPending: PropTypes.bool.isRequired,
     signUp: PropTypes.func.isRequired
@@ -117,6 +124,7 @@ SignUp.propTypes = {
 
 const mapStateToProps = store => {
     return {
+        appTheme: getThemePalette(store),
         language: getLanguage(store),
         authPending: getAuthPending(store)
     }

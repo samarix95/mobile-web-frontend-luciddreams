@@ -87,7 +87,7 @@ function ReadDream(props) {
 
     return (
         <div className={classes.root}>
-            <Paper className={`${classes.padding1} ${classes.stickyTop}`} >
+            <Paper className={`${classes.padding1} ${classes.stickyTop} ${classes.transprent02}`} >
                 <Breadcrumbs separator="›" aria-label="breadcrumb">
                     <StyledBreadcrumb component="a" color="primary" label={dict[language].buttons.Main} icon={<HomeIcon />} onClick={handleBackMainPage} />
                     <StyledBreadcrumb component="a" color="primary" label={dict[language].buttons.MyDreams} onClick={handleBackDreams} />
@@ -156,7 +156,7 @@ function ReadDream(props) {
                                 {userPostsData.find(item => (item.id === id))[`posts_tags`].map((item, key) =>
                                     <Grid item key={key} className={`${classes.margin1}`}>
                                         <Tooltip disableFocusListener disableTouchListener title={item.tag[`name_${language}`]} >
-                                            <Paper>
+                                            <Paper className={`${classes.margin1} ${classes.transprent03}`}>
                                                 <Avatar src={item.tag.img_url} style={appTheme.palette.type === 'dark' ? { filter: 'invert(1)' } : {}} />
                                             </Paper>
                                         </Tooltip>
@@ -186,7 +186,7 @@ function ReadDream(props) {
                                         >
                                             {userPostsData.find(item => (item.id === id))[`posts_technics`].map((item, key) =>
                                                 <Grid item key={key}>
-                                                    <Paper className={`${classes.padding1} ${classes.margin1}`}>
+                                                    <Paper className={`${classes.padding1} ${classes.margin1} ${classes.transprent03}`}>
                                                         <Typography variant="body1" align="center">
                                                             {item.technic[`name_${language}`]}
                                                         </Typography>
@@ -204,7 +204,7 @@ function ReadDream(props) {
                                         alignItems="center"
                                     >
                                         <Grid item>
-                                            <Paper className={`${classes.padding1} ${classes.margin1}`}>
+                                            <Paper className={`${classes.padding1} ${classes.margin1} ${classes.transprent03}`}>
                                                 <Typography>
                                                     {dict[language].texts.Realistic}
                                                 </Typography>
@@ -241,12 +241,12 @@ function ReadDream(props) {
                     justify="space-between"
                     alignItems="center"
                 >
-                    <Hidden only={["xs", "sm"]}>
-                        <Grid item md={3} />
+                    <Hidden only="xs">
+                        <Grid item sm={2} md={3} />
                     </Hidden>
                     {!deletePostPending
                         ? <React.Fragment>
-                            <Grid item xs={3} md={2}>
+                            <Grid item sm={2} md={2}>
                                 <Grid
                                     container
                                     direction="row"
@@ -260,7 +260,7 @@ function ReadDream(props) {
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <Grid item xs={9} md={4}>
+                            <Grid item sm={6} md={4}>
                                 <Grid
                                     container
                                     direction="row"
@@ -281,12 +281,12 @@ function ReadDream(props) {
                                 </Grid>
                             </Grid>
                         </React.Fragment>
-                        : <Grid item xs={12} md={6}>
+                        : <Grid item sm={8} md={6}>
                             <LinearProgress />
                         </Grid>
                     }
-                    <Hidden only={["xs", "sm"]}>
-                        <Grid item md={3} />
+                    <Hidden only="xs">
+                        <Grid item sm={2} md={3} />
                     </Hidden>
                 </Grid>
             </Container>

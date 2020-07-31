@@ -14,7 +14,8 @@ import {
     SET_ADD_POST_COMMENT_PENDING, SET_ADD_POST_COMMENT_DATA, SET_ADD_POST_COMMENT_ERROR,
     SET_UPDATE_POST_COMMENT_PENDING, SET_UPDATE_POST_COMMENT_DATA, SET_UPDATE_POST_COMMENT_ERROR,
     SET_SEARCH_ICON_PENDING, SET_SEARCH_ICON_DATA, SET_SEARCH_ICON_ERROR,
-    SET_ADD_LOCATION_PENDING, SET_ADD_LOCATION_DATA, SET_ADD_LOCATION_ERROR
+    SET_ADD_LOCATION_PENDING, SET_ADD_LOCATION_DATA, SET_ADD_LOCATION_ERROR,
+    SET_STT_PENDING, SET_STT_DATA, RESET_STT_DATA, SET_STT_ERROR
 } from "./types";
 
 export function setAppTheme(data) {
@@ -271,5 +272,27 @@ export function setAddLocationData(data) {
 export function setAddLocationError() {
     return {
         type: SET_ADD_LOCATION_ERROR
+    }
+}
+
+export function setSTTPending() {
+    return {
+        type: SET_STT_PENDING
+    }
+}
+export function setSTTData(data) {
+    return {
+        type: SET_STT_DATA,
+        data: data
+    }
+}
+export function resetSTTData() {
+    return {
+        type: RESET_STT_DATA
+    }
+}
+export function setSTTError() {
+    return {
+        type: SET_STT_ERROR
     }
 }

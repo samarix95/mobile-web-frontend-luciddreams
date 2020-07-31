@@ -7,6 +7,7 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Divider from "@material-ui/core/Divider";
+import Hidden from "@material-ui/core/Hidden";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -46,7 +47,7 @@ function ReadTechnic(props) {
 
     return (
         <div className={classes.root}>
-            <Paper className={`${classes.padding1} ${classes.stickyTop}`} >
+            <Paper className={`${classes.padding1} ${classes.stickyTop} ${classes.transprent02}`} >
                 <Breadcrumbs separator="›" aria-label="breadcrumb">
                     <StyledBreadcrumb component="a" color="primary" label={dict[language].buttons.Main} icon={<HomeIcon />} onClick={handleBackMainPage} />
                     <StyledBreadcrumb component="a" color="primary" label={dict[language].buttons.Technics} onClick={handleBackTechnics} />
@@ -65,13 +66,15 @@ function ReadTechnic(props) {
                 <Divider />
             </Container>
             <Container className={`${classes.margin2}`}>
-                <Grid
-                    container
+                <Grid container
                     direction="row"
                     justify="space-between"
                     alignItems="center"
                 >
-                    <Grid item xs={6}>
+                    <Hidden only="xs">
+                        <Grid item sm={2} md={3} />
+                    </Hidden>
+                    <Grid item sm={4} md={3}>
                         <Grid
                             container
                             direction="row"
@@ -85,7 +88,7 @@ function ReadTechnic(props) {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item sm={4} md={3}>
                         <Grid
                             container
                             direction="row"
@@ -99,6 +102,9 @@ function ReadTechnic(props) {
                             </Grid>
                         </Grid>
                     </Grid>
+                    <Hidden only="xs">
+                        <Grid item sm={2} md={3} />
+                    </Hidden>
                 </Grid>
             </Container>
         </div>

@@ -71,6 +71,7 @@ function MuiAlert(props) {
 function App(props) {
 	const { appTheme, language, snackbarOpen, snackbarData, setLanguage, closeSnackbar, dialogConfirmOpen, dialogConfirmData, cancelDialogConfirm, acceptDialogConfirm } = props;
 	const muitheme = createMuiTheme(appTheme);
+	const [showFullscreenButton, setShowFullscreenButton] = React.useState(window.matchMedia('(display-mode: fullscreen)').matches ? false : true);
 	Object.assign(muitheme, {
 		overrides: {
 			MUIRichTextEditor: {
@@ -98,7 +99,52 @@ function App(props) {
 		acceptDialogConfirm()
 	};
 
+	const setFullscreen = () => {
+		if (document.documentElement.requestFullscreen) {
+			document.documentElement.requestFullscreen();
+			setShowFullscreenButton(false);
+		}
+		else if (document.documentElement.mozRequestFullScreen) {
+			document.documentElement.mozRequestFullScreen();
+			setShowFullscreenButton(false);
+		}
+		else if (document.documentElement.webkitRequestFullscreen) {
+			document.documentElement.webkitRequestFullscreen();
+			setShowFullscreenButton(false);
+		}
+		else if (document.documentElement.msRequestFullscreen) {
+			document.documentElement.msRequestFullscreen();
+			setShowFullscreenButton(false);
+		}
+	};
+
 	setLanguage(userLang);
+
+	React.useEffect(() => {
+
+		document.addEventListener('fullscreenchange', fullScreenisten, false);
+		document.addEventListener('mozfullscreenchange', fullScreenisten, false);
+		document.addEventListener('MSFullscreenChange', fullScreenisten, false);
+		document.addEventListener('webkitfullscreenchange', fullScreenisten, false);
+
+		function fullScreenisten() {
+			if (document.fullscreenEnabled) {
+				if (!window.matchMedia('(display-mode: fullscreen)').matches) {
+					if ((window.screen.availHeight || window.screen.height - 30) <= window.innerHeight) {
+						if (showFullscreenButton)
+							setShowFullscreenButton(true);
+					}
+					else {
+						if (document.fullscreenElement) { }
+						else setShowFullscreenButton(true);
+					}
+				}
+			}
+			else {
+				setShowFullscreenButton(false);
+			}
+		}
+	}, [showFullscreenButton, setShowFullscreenButton]);
 
 	return (
 		<Router history={history}>
@@ -157,6 +203,13 @@ function App(props) {
 						<PrivateRoute path={historyPath.ReadTechnic} component={ReadTechnic} />
 						<PrivateRoute path={historyPath.EditTechnic} component={EditTechnic} />
 					</Switch>
+
+					{showFullscreenButton
+						? <React.Fragment>
+							{/* <button onClick={setFullscreen}>Go fullscreen</button> */}
+						</React.Fragment>
+						: <React.Fragment />
+					}
 				</React.Suspense>
 			</MuiThemeProvider>
 		</Router>

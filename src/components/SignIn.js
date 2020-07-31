@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
+import clsx from "clsx";
 
 import LinearProgress from "@material-ui/core/LinearProgress";
 import TextField from "@material-ui/core/TextField";
@@ -15,10 +16,11 @@ import Styles from "../styles";
 import dict from "../dictionary";
 import { userSignIn } from "../functions/fetch";
 import { getAuthPending } from "../reducers/authReducer";
+import { getThemePalette } from "../reducers/appThemeReducer";
 import { getLanguage } from "../reducers/languageReducer";
 
 function SignIn(props) {
-    const { language, authPending, signIn } = props;
+    const { appTheme, language, authPending, signIn } = props;
     const classes = Styles();
     const [login, setLogin] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -74,12 +76,16 @@ function SignIn(props) {
                         </Grid>
                         : <React.Fragment>
                             <Grid item className={`${classes.margin1}`}>
-                                <Button fullWidth size="small" onClick={handleSignIn} variant="outlined" color="primary">
+                                <Button className={clsx(appTheme.palette.type === "dark" ? classes.DarkBackgroundColor : classes.LightBackgroundColor)}
+                                    fullWidth size="small" onClick={handleSignIn} variant="outlined" color="primary"
+                                >
                                     {dict[language].buttons.SignIn}
                                 </Button>
                             </Grid>
                             <Grid item className={`${classes.margin1}`}>
-                                <Button fullWidth size="small" onClick={handleBack} variant="outlined" color="primary">
+                                <Button className={clsx(appTheme.palette.type === "dark" ? classes.DarkBackgroundColor : classes.LightBackgroundColor)}
+                                    fullWidth size="small" onClick={handleBack} variant="outlined" color="primary"
+                                >
                                     {dict[language].buttons.Back}
                                 </Button>
                             </Grid>
@@ -92,6 +98,7 @@ function SignIn(props) {
 }
 
 SignIn.propTypes = {
+    appTheme: PropTypes.object.isRequired,
     language: PropTypes.string.isRequired,
     authPending: PropTypes.bool.isRequired,
     signIn: PropTypes.func.isRequired
@@ -99,6 +106,7 @@ SignIn.propTypes = {
 
 const mapStateToProps = store => {
     return {
+        appTheme: getThemePalette(store),
         language: getLanguage(store),
         authPending: getAuthPending(store)
     }

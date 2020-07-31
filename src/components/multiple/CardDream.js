@@ -28,12 +28,18 @@ import historyPath from "../../historyPath";
 import Styles from "../../styles";
 import dict from "../../dictionary";
 
+import { setOpenDialogConfirm, setResetDialogConfirm } from "../../actions/actions";
+import { fetchUpdatePost } from "../../functions/fetch";
 import { getLanguage } from "../../reducers/languageReducer";
+import { getAuthData } from "../../reducers/authReducer";
 import { getUserPostsData } from "../../reducers/userPostsReducer";
 import { getThemePalette } from "../../reducers/appThemeReducer";
+import { getDialogConfirmData, getDialogConfirmAction } from "../../reducers/dialogConfirmReducer";
 
 function CardDream(props) {
-    const { appTheme, language, userPostsData, card_id } = props;
+    const { appTheme, language, authData, userPostsData, card_id,
+        openDialogConfirm, resetDialogConfirm, dialogConfirmData, dialogConfirmAction,
+        updatePost } = props;
     const classes = Styles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const dateOfDream = new Date(userPostsData.find(item => (item.id === card_id))[`dream_date`]).getDate() + "." + (new Date(userPostsData.find(item => (item.id === card_id))[`dream_date`]).getMonth() + 1) + "." + new Date(userPostsData.find(item => (item.id === card_id))[`dream_date`]).getFullYear() + " " + new Date(userPostsData.find(item => (item.id === card_id))[`dream_date`]).getHours() + ":" + ("0" + new Date(userPostsData.find(item => (item.id === card_id))[`dream_date`]).getMinutes()).slice(-2);
@@ -57,9 +63,55 @@ function CardDream(props) {
         setAnchorEl(null);
     };
 
+    const handleChangePublic = () => {
+        openDialogConfirm(
+            userPostsData.find(item => (item.id === card_id))[`is_public`] === 0
+                ? {
+                    title: dict[language].texts.ChangePublic,
+                    message: dict[language].texts.UsersCanRead,
+                    action: "change_public",
+                    value: 1,
+                    id: card_id
+                }
+                : {
+                    title: dict[language].texts.ChangePublic,
+                    message: dict[language].texts.UsersCantRead,
+                    action: "change_public",
+                    value: 0,
+                    id: card_id
+                }
+        );
+    };
+
+    React.useEffect(() => {
+        if (typeof dialogConfirmAction === "boolean" && dialogConfirmData.action === "change_public" && card_id === dialogConfirmData.id) {
+            if (dialogConfirmAction) {
+                let defaultTags = [];
+                userPostsData.find(item => (item.id === card_id))[`posts_tags`].map(item => defaultTags.push(item.tag));
+                let defaultTechnics = [];
+                userPostsData.find(item => (item.id === card_id))[`posts_technics`].map(item => defaultTechnics.push(item.technic));
+                updatePost({
+                    title: userPostsData.find(item => (item.id === card_id)).title,
+                    content: userPostsData.find(item => (item.id === card_id)).content,
+                    rating: userPostsData.find(item => (item.id === card_id)).rating,
+                    post_type: userPostsData.find(item => (item.id === card_id)).post_type,
+                    dream_date: userPostsData.find(item => (item.id === card_id)).dream_date,
+                    is_public: dialogConfirmData.value,
+                    tags: defaultTags,
+                    technics: defaultTechnics,
+                    language: language,
+                    id: dialogConfirmData.id,
+                    create_user: authData.id,
+                    redirect: false
+                });
+            }
+            resetDialogConfirm();
+        }
+    }, [card_id, dialogConfirmAction, resetDialogConfirm, dialogConfirmData, updatePost, language, authData, userPostsData]);
+
     return (
         <Grid item xs={12} sm={4} md={3} style={{ display: "flex" }}>
-            <Card className={`${classes.margin1} ${classes.flexSpaceBetween}`} style={{ width: "100%" }} >
+            <Card raised className={`${classes.margin1} ${classes.flexSpaceBetween} ${classes.transprent03}`} style={{ width: "100%" }} >
                 <CardContent className={`${classes.flexSpaceBetween}`} style={{ height: "100%" }} >
                     <Typography variant="h6" paragraph>
                         {userPostsData.find(item => (item.id === card_id))[`title`]}
@@ -152,7 +204,7 @@ function CardDream(props) {
                                                 {userPostsData.find(item => (item.id === card_id))[`posts_tags`].map((item, key) =>
                                                     <Grid item key={key} className={`${classes.margin1}`}>
                                                         <Tooltip disableFocusListener disableTouchListener title={item.tag[`name_${language}`]} >
-                                                            <Paper>
+                                                            <Paper className={`${classes.margin1}`}>
                                                                 <Avatar src={item.tag.img_url} style={appTheme.palette.type === 'dark' ? { filter: 'invert(1)' } : {}} />
                                                             </Paper>
                                                         </Tooltip>
@@ -164,19 +216,14 @@ function CardDream(props) {
                                     }
                                 </Grid>
                                 <Grid item className={`${classes.flexSpaceBetween}`}>
-                                    <Tooltip disableFocusListener
-                                        disableTouchListener
-                                        title={
-                                            userPostsData.find(item => (item.id === card_id))[`is_public`]
-                                                ? dict[language].texts.UsersCanRead
-                                                : dict[language].texts.UsersCantRead
-                                        }
-                                    >
-                                        {userPostsData.find(item => (item.id === card_id))[`is_public`]
-                                            ? <VisibilityIcon />
-                                            : <VisibilityOffIcon />
-                                        }
-                                    </Tooltip>
+                                    {userPostsData.find(item => (item.id === card_id))[`is_public`]
+                                        ? <IconButton size="small" onClick={handleChangePublic}>
+                                            <VisibilityIcon />
+                                        </IconButton>
+                                        : <IconButton size="small" onClick={handleChangePublic}>
+                                            <VisibilityOffIcon />
+                                        </IconButton>
+                                    }
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -190,18 +237,29 @@ function CardDream(props) {
 CardDream.propTypes = {
     appTheme: PropTypes.object.isRequired,
     language: PropTypes.string.isRequired,
-    userPostsData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired
+    authData: PropTypes.object.isRequired,
+    userPostsData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+    dialogConfirmData: PropTypes.object.isRequired,
+    openDialogConfirm: PropTypes.func.isRequired,
+    resetDialogConfirm: PropTypes.func.isRequired,
+    updatePost: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => {
     return {
         appTheme: getThemePalette(store),
         language: getLanguage(store),
-        userPostsData: getUserPostsData(store)
+        authData: getAuthData(store),
+        userPostsData: getUserPostsData(store),
+        dialogConfirmData: getDialogConfirmData(store),
+        dialogConfirmAction: getDialogConfirmAction(store)
     }
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+    openDialogConfirm: setOpenDialogConfirm,
+    resetDialogConfirm: setResetDialogConfirm,
+    updatePost: fetchUpdatePost,
 }, dispatch)
 
 export default connect(

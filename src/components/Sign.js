@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import clsx from "clsx";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -11,10 +12,11 @@ import history from "../history";
 import historyPath from "../historyPath";
 import Styles from "../styles";
 import dict from "../dictionary";
+import { getThemePalette } from "../reducers/appThemeReducer";
 import { getLanguage } from "../reducers/languageReducer";
 
 function Sign(props) {
-    const { language } = props;
+    const { appTheme, language } = props;
     const classes = Styles();
 
     const handleSignIn = () => {
@@ -68,12 +70,24 @@ function Sign(props) {
                             alignItems="stretch"
                         >
                             <Grid item className={`${classes.margin1}`}>
-                                <Button fullWidth size="small" onClick={handleSignIn} variant="outlined" color="primary">
+                                <Button className={clsx(appTheme.palette.type === "dark" ? classes.DarkBackgroundColor : classes.LightBackgroundColor)}
+                                    fullWidth
+                                    size="small"
+                                    onClick={handleSignIn}
+                                    variant="outlined"
+                                    color="primary"
+                                >
                                     {dict[language].buttons.SignIn}
                                 </Button>
                             </Grid>
                             <Grid item className={`${classes.margin1}`}>
-                                <Button fullWidth size="small" onClick={handleSignUp} variant="outlined" color="primary">
+                                <Button className={clsx(appTheme.palette.type === "dark" ? classes.DarkBackgroundColor : classes.LightBackgroundColor)}
+                                    fullWidth
+                                    size="small"
+                                    onClick={handleSignUp}
+                                    variant="outlined"
+                                    color="primary"
+                                >
                                     {dict[language].buttons.SignUp}
                                 </Button>
                             </Grid>
@@ -86,11 +100,13 @@ function Sign(props) {
 }
 
 Sign.propTypes = {
+    appTheme: PropTypes.object.isRequired,
     language: PropTypes.string.isRequired
 };
 
 const mapStateToProps = store => {
     return {
+        appTheme: getThemePalette(store),
         language: getLanguage(store)
     }
 };

@@ -31,6 +31,8 @@ export default {
         DeleteTitle: "Удалить",
         DeleteCommentMessage: "Вы действительно хотите удалить комментарий?",
         DeletePostMessage: "Вы действительно хотите удалить сон?",
+        LogOut: "Вы хотите выйти?",
+        ChangePublic: "Изменить доступность",
 
         Dream: "Сон",
         LucidDream: "Осознанный сон",
@@ -38,8 +40,8 @@ export default {
 
         Realistic: "Реалистичность",
 
-        UsersCanRead: "Другие пользователи могут читать ваш сон",
-        UsersCantRead: "Другие пользователи не могут читать ваш сон",
+        UsersCanRead: "После изменения другие пользователи смогут читать ваш сон",
+        UsersCantRead: "После изменения другие пользователи не смогут читать ваш сон",
 
         AddComment: "Добавить комментарий",
         DeletedComment: "Комментарий удален",
@@ -56,6 +58,11 @@ export default {
         FindIcon2: "Продолжаем искать",
         FindIcon3: "Да где же ты?",
         FindIcon4: "Вот почти почти...",
+
+        SpeechToText: "Перевод речи в текст",
+        InsertBefore: "В начало текста",
+        InsertReplace: "Заменить текст",
+        InsertEnd: "В конец текста"
     },
     buttons: {
         SignIn: "Вход",
@@ -76,14 +83,19 @@ export default {
         Save: "Сохранить",
         Add: "Добавить",
         Delete: "Удалить",
+        Insert: "Вставить",
 
         Main: "Главная",
         MyDreams: "Мои сны",
         AddDream: "Добавить сон",
         AddLocation: "Добавить локацию",
         Technics: "Техники",
+
+        Translate: "Перевести",
     },
     errors: {
+        DB_ERROR: "Ошибка БД",
+
         CREATE_ERROR: "CREATE_ERROR",
         RETRIEVE_ERROR: "RETRIEVE_ERROR",
 

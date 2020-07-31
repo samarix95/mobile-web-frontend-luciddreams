@@ -31,6 +31,8 @@ export default {
         DeleteTitle: "Delete",
         DeleteCommentMessage: "Are you sure delete this comment?",
         DeletePostMessage: "Are you sure delete this dream?",
+        LogOut: "Are you sure log out?",
+        ChangePublic: "Change public",
 
         Dream: "Dream",
         LucidDream: "Lucid dream",
@@ -38,8 +40,8 @@ export default {
 
         Realistic: "Realistic",
 
-        UsersCanRead: "Other users can read your dream",
-        UsersCantRead: "Other users cant read your dream",
+        UsersCanRead: "After change other users can read your dream",
+        UsersCantRead: "After change other users cant read your dream",
 
         AddComment: "Add comment",
         DeletedComment: "Comment deleted",
@@ -56,6 +58,11 @@ export default {
         FindIcon2: "Still looking for an icon",
         FindIcon3: "Where are you?",
         FindIcon4: "That's almost ...",
+
+        SpeechToText: "Traslate speech to text",
+        InsertBefore: "To the begining",
+        InsertReplace: "Replace text",
+        InsertEnd: "In the end",
     },
     buttons: {
         SignIn: "Sign in",
@@ -76,14 +83,19 @@ export default {
         Save: "Save",
         Add: "Add",
         Delete: "Delete",
+        Insert: "Insert",
 
         Main: "Main",
         MyDreams: "My dreams",
         AddDream: "Add dream",
         AddLocation: "Add location",
         Technics: "Technics",
+
+        Translate: "Translate"
     },
     errors: {
+        DB_ERROR: "Database error",
+
         CREATE_ERROR: "CREATE_ERROR",
         RETRIEVE_ERROR: "RETRIEVE_ERROR",
 
